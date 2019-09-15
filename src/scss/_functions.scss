@@ -1,0 +1,84 @@
+// Default values
+// -----------------------------------------------------------------------------
+$base-font-size: 16px !default;
+$baseline-ratio: 1.618 !default;
+
+
+// Truthy and falsy
+// ----------------------------------------------------
+// a truthy value is a value that is considered true
+// when encountered in a Boolean context. All values
+// are truthy unless they are defined as falsy, except
+// for these values: false, 0, "", undefined, and NaN
+@function truthy($value: false) {
+  @if ($value == false or $value == '' or $value == 0 or $value == null or $value == undefined or $value == NaN) {
+    @return false;
+  }
+
+  @return true;
+}
+
+@function falsy($value: true) {
+  @if ($value == false or $value == '' or $value == 0 or $value == null or $value == undefined or $value == NaN) {
+    @return true;
+  }
+
+  @return false;
+}
+
+// Strip units from a variable
+// ---------------------------
+@function strip-units($number) {
+  @return $number / ($number * 0 + 1);
+}
+
+// PX to REM
+// ---------
+// REM value is calculated by dividing your wanted size in pixels with default
+// font size for given resolution (from /styles/config_media.json)
+// Input values are in pixel units, returned value is in REM units
+@function px2rem($size-px, $base-size-px) {
+  @return ($size-px / $base-size-px) * 1rem;
+}
+
+// REM to PX
+// ---------
+// Converts REM to PX.
+// It is advised to use this function from media() mixin
+// since every resolution has different $base-font-size
+@function rem2px($rem-value, $base-size-px: $base-font-size) {
+  @return round(strip-units($rem-value) * $base-size-px);
+}
+
+// Baseline height in PX units
+// ---------------------------
+// Baseline height is height of a text line in typographic grid.
+// Result of this calculation will adapt to font size. If font size is higher
+// than baseline height, baseline height will be increased by one more
+// baseline height for default font size for that resolution
+
+// Input values are in pixel units
+// $size-px - your custom font size
+// $base-size-px - base font size for given resolution from `/styles/config_media.json`
+// $base-ratio - your custom baseline ratio. Defaults to golden ratio
+// Returned value is rounded up to whole pixels
+@function baseline-height-px($size-px, $base-size-px: $base-font-size, $base-ratio: $baseline-ratio) {
+  $calc-baseline: $base-size-px * $base-ratio;
+
+  @return round((floor($size-px / $calc-baseline) + 1) * $calc-baseline);
+}
+
+// Baseline ratio in REM units
+// ---------------------------
+// Baseline height is height of a text line in typographic grid.
+// Remember that 1rem is default font-size defined for `html` tag.
+// If you set `font-size: 16px`, than 1rem = 16px
+// That value may change per different media breakpoint
+
+// Input values are in REM units
+// $size-rem - your custom font size (example: 1.2rem)
+// $base-ratio - your custom baseline ratio. Defaults to golden ratio
+// Returned value is in rem units
+@function baseline-height-rem($size-rem, $base-ratio: $baseline-ratio) {
+  @return (floor($size-rem / $base-ratio) + 1) * $base-ratio;
+}

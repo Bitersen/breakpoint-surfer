@@ -1,0 +1,32 @@
+######################
+# OS generated files #
+######################
+*/.DS_Store
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+sh.exe.stackdump
+.sass-cache/*
+node_modules
+.vscode
+
+#################
+# Project files #
+#################
+
+# Generated files and folders
+**/config/
+**/generated/
+**/coverage/
+
+# Temporary files
+**/*.old.*
+**/*.temp.*
+
+# npm package lock
+package-lock.json
+yarn.lock

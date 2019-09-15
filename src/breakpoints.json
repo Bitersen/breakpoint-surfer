@@ -1,0 +1,32 @@
+{
+  "mobile": {
+    "breakpointStart":  "320px",
+    "baseFontSize":     "14px",
+    "fluidWidth":       "true"
+  },
+  "phablet": {
+    "breakpointStart":  "520px",
+    "baseFontSize":     "14px",
+    "fluidWidth":       "true"
+  },
+  "tablet": {
+    "breakpointStart":  "768px",
+    "baseFontSize":     "16px",
+    "fluidWidth":       "true"
+  },
+  "desktop": {
+    "breakpointStart":  "1024px",
+    "baseFontSize":     "16px",
+    "fluidWidth":       "false"
+  },
+  "desktop2": {
+    "breakpointStart":  "1240px",
+    "baseFontSize":     "16px",
+    "fluidWidth":       "false"
+  },
+  "desktop3": {
+    "breakpointStart":  "1440px",
+    "baseFontSize":     "18px",
+    "fluidWidth":       "false"
+  }
+}

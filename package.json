@@ -1,0 +1,47 @@
+{
+  "name": "breakpoint-surfer",
+  "version": "0.0.1",
+  "description": "NPM / SCSS plugin for faster responsive coding",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node ./src/js/thanks",
+    "lint": "eslint index.js src/js/*.js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.2.1",
+    "eslint-config-standard": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  },
+  "dependencies": {
+    "bit-message-box": "^1.0.1",
+    "chalk": "^2.4.2",
+    "clean-css": "^4.2.1",
+    "fs-extra": "^8.1.0",
+    "group-css-media-queries": "^1.4.1",
+    "node-sass": "^4.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Bitersen/breakpoint-surfer.git"
+  },
+  "keywords": [
+    "css",
+    "scss",
+    "style",
+    "responsive",
+    "design",
+    "webdesign",
+    "ui",
+    "breakpoint",
+    "rwd"
+  ],
+  "author": "Vladimir Jovanović <vladimir@bitersen.com>",
+  "license": "MIT"
+}

@@ -1,0 +1,130 @@
+// Default values
+// -----------------------------------------------------------------------------
+$baseline-ratio: 1.618 !default;
+$resolutions: (
+  mobile: (
+    breakpointStart:  320px,
+    baseFontSize:     14px,
+    fluidWidth:       true
+  ),
+  phablet: (
+    breakpointStart:  520px,
+    baseFontSize:     14px,
+    fluidWidth:       true
+  ),
+  tablet: (
+    breakpointStart:  768px,
+    baseFontSize:     16px,
+    fluidWidth:       true
+  ),
+  desktop: (
+    breakpointStart:  1024px,
+    baseFontSize:     16px,
+    fluidWidth:       false
+  ),
+  desktop2: (
+    breakpointStart:  1280px,
+    baseFontSize:     16px,
+    fluidWidth:       false
+  ),
+  desktop3: (
+    breakpointStart:  1440px,
+    baseFontSize:     18px,
+    fluidWidth:       false
+  )
+) !default;
+
+
+// Helper functions
+// -----------------------------------------------------------------------------
+@function get-resolution($label, $resolution-map: $resolutions) {
+  @each $resolution in $resolution-map {
+    @if nth($resolution, 1) == $label {
+      @return map-get($resolution-map, $label);
+    }
+  }
+
+  @error 'Resolution "#{$label}" doesn\'t exist';
+
+  @return null;
+}
+
+
+// Mixins
+// -----------------------------------------------------------------------------
+
+// Media-resolution
+// ----------------
+// Private mixin created to be used internally in `media()` mixin
+@mixin _media-resolution($breakpoints...) {
+  @each $breakpoint in $breakpoints {
+    // Iterate through all resolutions and apply only those rules where they
+    // match breakpoint
+    @for $i from 1 through length($resolutions) {
+      $breakpoint: to-lower-case(unquote($breakpoint));
+      $resolution: get-resolution($breakpoint);
+      $resolution-name: nth(nth($resolutions, $i), 1);
+      $breakpoint-start: map-get($resolution, breakpointStart) !global;
+      $base-font-size: map-get($resolution, baseFontSize) !global;
+      $fluid-width: map-get($resolution, fluidWidth) !global;
+      $base-px: baseline-height-px($base-font-size, $base-font-size) !global;
+      $base-rem: baseline-height-rem(1rem) !global;
+
+      // Case where there is only one resolution in the list
+      @if (length($resolutions) == 1) {
+        @error 'There is only 1 resolution in the list - no "@media" rules will be created. Check your resolution list.';
+      }
+
+      // First breakpoint doesn't have minimum width.
+      // Start of the next breakpoint will be used as max value
+      @if (length($resolutions) > 1 and $i==1 and $breakpoint == $resolution-name) {
+        $next-resolution: nth(map-values($resolutions), $i+1);
+        $breakpoint-end: map-get($next-resolution, breakpointStart) - 0.1px !global;
+
+        @media (max-width: $breakpoint-end) { @content; }
+      }
+
+      // Breakpoints between first and last resolution are encapsulated between
+      // min and max values. There should be at least 3 resolutions in list for
+      // this to work properly
+      @if (length($resolutions) > 1 and $i > 1 and $i < length($resolutions) and $breakpoint == $resolution-name) {
+        $next-resolution: nth(map-values($resolutions), $i+1);
+        $breakpoint-end: map-get($next-resolution, breakpointStart) - 0.1px !global;
+
+        @media (min-width: $breakpoint-start) and (max-width: $breakpoint-end) { @content; }
+      }
+
+      // Last breakpoint doesn't have max value
+      @if (length($resolutions) > 1 and $i > 1 and $i == length($resolutions) and $breakpoint == $resolution-name) {
+        $breakpoint-end: 100% !global;
+
+        @media (min-width: $breakpoint-start) { @content; }
+      }
+    }
+  }
+}
+
+// Media mixin
+// -----------
+// Requires private mixin `_media-resolution()`
+@mixin media($breakpoints...) {
+  @each $breakpoint in $breakpoints {
+    // Rules should be applied to all breakpoints
+    @if (length($breakpoints) == 1 and to-lower-case(unquote($breakpoint)) == all) {
+      @for $i from 1 through length($resolutions) {
+        $resolution-name: nth(nth($resolutions, $i), 1);
+
+        @include _media-resolution($resolution-name) { @content; }
+      }
+    }
+
+    // Rules should be applied to specific breakpoints
+    @else {
+      @if (length($breakpoints) > 1 and to-lower-case(unquote($breakpoint)) == all or length($breakpoints) == length($resolutions)) {
+        @error 'If you want to apply rules to all breakpoints, use "@include media(all)"';
+      }
+
+      @include _media-resolution($breakpoint) { @content; }
+    }
+  }
+}
